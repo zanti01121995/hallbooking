@@ -8,7 +8,7 @@ bookRouter.post('/', async (req, res) => {
     try {
 
         const rooms = await roomModel.find({ room_id: req.body.roomid });
-
+        console.log(req.body.roomid);
         if (rooms.length === 0) {
             return res.status(201).json({ message: "room not not exist" })
 
