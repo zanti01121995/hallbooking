@@ -4,17 +4,20 @@ import { room as roomModel } from "../db_utils/models.js";
 
 const bookRouter = express.Router();
 
+/////////////api for booking a room///////////////
+
 bookRouter.post('/', async (req, res) => {
     try {
 
         const rooms = await roomModel.find({ room_id: req.body.roomid });
         console.log(req.body.roomid);
+
+        ///////condition to check the booking status////////////////
         if (rooms.length === 0) {
             return res.status(201).json({ message: "room not not exist" })
 
         } else {
             const booked = await bookingModel.find({ roomid: req.body.roomid, date: req.body.date, starttime: req.body.starttime });
-            // console.log(booked);
             if (booked.length > 0) {
                 return res.status(400).json({ message: "room already for this date and time" });
             }
@@ -35,6 +38,8 @@ bookRouter.post('/', async (req, res) => {
 
 });
 
+//////////api to get all the booking details/////////////////
+
 bookRouter.get('/allbookings', async (req, res) => {
     try {
         const bookings = await bookingModel.find({});
@@ -48,6 +53,9 @@ bookRouter.get('/allbookings', async (req, res) => {
         console.log(err);
     }
 })
+
+
+///////////api to list all the rooms with booked data/////////////
 
 bookRouter.get('/rooms', async (req, res) => {
 
@@ -77,6 +85,7 @@ bookRouter.get('/rooms', async (req, res) => {
     res.send(rooms);
 })
 
+///////////api to list all the customers with booked data/////////////
 
 bookRouter.get('/customers', async (req, res) => {
     const customers = await bookingModel.aggregate([
@@ -90,6 +99,8 @@ bookRouter.get('/customers', async (req, res) => {
     ]);
     res.send(customers);
 })
+
+////////////api to list how many times a user booked the room////////////
 
 bookRouter.get('/customer/:name', async (req, res) => {
     // const customername = req.params;

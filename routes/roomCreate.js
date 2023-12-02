@@ -2,15 +2,12 @@ import express from "express";
 import { room as roomModel } from "../db_utils/models.js";
 
 const roomRouter = express.Router();
-// const availableRoom = [{
-//     "room_id": 10,
-//     "no_of_seat": 1,
-//     "amenities": "Fan",
-//     "price_per_hour": 200
-// }]
+
+
+/////////////api for creating a room///////////////
+
 roomRouter.post('/', async (req, res) => {
-    // availableRoom.push(req.body);
-    // res.send(req.body)
+
     const room = new roomModel({ ...req.body });
     const rooms = await roomModel.find({ room_id: room.room_id });
     if (rooms.length > 0) {
@@ -27,9 +24,10 @@ roomRouter.post('/', async (req, res) => {
 
 })
 
+/////////////api for get all the room details///////////////
+
 roomRouter.get('/', async (req, res) => {
-    // let room = availableRoom;
-    // res.send(room)
+
     try {
         const rooms = await roomModel.find({}, { room_id: 1, no_of_seats: 1, amenities: 1, price_per_hour: 1, _id: 0 });
 
@@ -41,9 +39,11 @@ roomRouter.get('/', async (req, res) => {
     }
 }
 )
+
+/////////////api for get particular room details///////////////
+
 roomRouter.get('/:roomid', async (req, res) => {
-    // let room = availableRoom;
-    // res.send(room)
+
     const { roomid } = req.params;
     try {
         const room = await roomModel.findOne({ room_id: roomid }, { room_id: 1, no_of_seats: 1, amenities: 1, price_per_hour: 1, _id: 0 });
@@ -56,6 +56,9 @@ roomRouter.get('/:roomid', async (req, res) => {
     }
 }
 )
+
+/////////////api for update a particular room details///////////////
+
 roomRouter.put('/:roomid', async (req, res) => {
     const { roomid } = req.params;
     try {
@@ -67,6 +70,8 @@ roomRouter.put('/:roomid', async (req, res) => {
         res.status(500).send({ msg: 'Error while updating room' });
     }
 });
+
+/////////////api for delete a room details///////////////
 
 roomRouter.delete('/:roomid', async (req, res) => {
     const { roomid } = req.params;
